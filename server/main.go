@@ -18,22 +18,33 @@ type Member struct {
 }
 
 func getId(input string) string {
+	// Code to handle file input
 	jsonFile, err := os.Open(input)
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer jsonFile.Close()
 
+	// Converts the file into a byte array
 	byteValue, _ := io.ReadAll(jsonFile)
 
 	var member Member
 
+	// Parses the byte array into Go readable JSON data
 	json.Unmarshal([]byte(byteValue), &member)
+
+	// Validate the JSON has the correct fields
+	if member.Id == "" || member.Name == "" || member.Homecity == "" {
+		fmt.Println("This JSON file has the incorrect structure")
+		return ""
+	}
+
 	fmt.Println(member.Id)
 
+	// Checks if the ID gotten from the data is valid
 	if _, err := strconv.Atoi(member.Id); err != nil {
 		fmt.Println("This is not a valid ID")
-		return "false"
+		return ""
 	}
 
 	return member.Id
@@ -41,11 +52,13 @@ func getId(input string) string {
 }
 
 func postId(id string) string {
+	// Creates a JSON packet
 	request := fmt.Sprintf(`{"id": "%s"}`, id)
 
 	jsonBody := []byte(request)
 	bodyReader := bytes.NewReader(jsonBody)
 
+	// Generates a request for this packet
 	req, err := http.NewRequest(http.MethodPost, "http://localhost:8080/word", bodyReader)
 	if err != nil {
 		fmt.Println(err)
@@ -57,6 +70,7 @@ func postId(id string) string {
 		Timeout: 30 * time.Second,
 	}
 
+	// Sends the request to our locally run API and parses the result
 	resp, err := client.Do(req)
 
 	respBody, _ := io.ReadAll(resp.Body)
@@ -67,14 +81,9 @@ func postId(id string) string {
 }
 
 func main() {
-	var input string
+	id := getId("data.json")
 
-	fmt.Print("Input the json file name: ")
-	fmt.Scan(&input)
-
-	id := getId(input)
-
-	if id == "false" {
+	if id == "" {
 		return
 	}
 
