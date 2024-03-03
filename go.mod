@@ -1,3 +1,3 @@
-module idtoword
+module server/idtoword
 
 go 1.22.0
