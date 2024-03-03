@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -16,8 +17,8 @@ type Member struct {
 	Homecity string
 }
 
-func main() {
-	jsonFile, err := os.Open("test.json")
+func getId(input string) string {
+	jsonFile, err := os.Open(input)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -30,7 +31,17 @@ func main() {
 	json.Unmarshal([]byte(byteValue), &member)
 	fmt.Println(member.Id)
 
-	request := fmt.Sprintf(`{"id": "%s"}`, member.Id)
+	if _, err := strconv.Atoi(member.Id); err != nil {
+		fmt.Println("This is not a valid ID")
+		return "false"
+	}
+
+	return member.Id
+
+}
+
+func postId(id string) string {
+	request := fmt.Sprintf(`{"id": "%s"}`, id)
 
 	jsonBody := []byte(request)
 	bodyReader := bytes.NewReader(jsonBody)
@@ -49,7 +60,24 @@ func main() {
 	resp, err := client.Do(req)
 
 	respBody, _ := io.ReadAll(resp.Body)
-
-	fmt.Println(string(respBody))
 	resp.Body.Close()
+
+	return string(respBody)
+
+}
+
+func main() {
+	var input string
+
+	fmt.Print("Input the json file name: ")
+	fmt.Scan(&input)
+
+	id := getId(input)
+
+	if id == "false" {
+		return
+	}
+
+	fmt.Println(postId(id))
+
 }
