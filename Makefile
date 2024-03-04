@@ -1,7 +1,10 @@
 build:
-	go build -o bin/main server/main.go
+	go build -o bin/main cmd/main.go
 
 run:
-	go run server/main.go
+	go run cmd/main.go
 
-all: build run
+test:
+	go test -v github.com/buirec/Frameplay-ID-to-Word/server
+
+all: build test run
