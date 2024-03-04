@@ -1,4 +1,4 @@
-# 🤓 Go ID to Word
+# 🤓 Frameplay Backend Assessment
 
 A GoLang application that takes in member information for a theoretical organisation (Let's say Globex), uses the ID and transforms it to return a word!
 
