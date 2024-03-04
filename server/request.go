@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -15,6 +16,12 @@ type Config struct {
 }
 
 func PostId(id string) string {
+	// Checks if the ID given is valid
+	if _, err := strconv.Atoi(id); err != nil {
+		fmt.Println("This is not a valid ID")
+		return ""
+	}
+
 	// Creates a JSON packet
 	request := fmt.Sprintf(`{"id": "%s"}`, id)
 
