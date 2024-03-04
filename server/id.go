@@ -29,7 +29,11 @@ func GetId(input string) string {
 	}
 
 	// Parses the byte array into Go readable JSON data
-	json.Unmarshal([]byte(jsonFile), &member)
+	err = json.Unmarshal([]byte(jsonFile), &member)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
 
 	// Validate the JSON has the correct fields
 	if member.Id == "" || member.Name == "" || member.Homecity == "" {

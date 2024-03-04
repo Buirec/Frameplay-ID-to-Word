@@ -38,7 +38,11 @@ func PostId(id string) string {
 		fmt.Println(err)
 		return ""
 	}
-	json.Unmarshal([]byte(jsonFile), &config)
+	err = json.Unmarshal([]byte(jsonFile), &config)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
 
 	// Generates a request for this packet
 	req, err := http.NewRequest(http.MethodPost, config.Server+"word", bodyReader)

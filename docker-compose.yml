@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  app:
+    build:
+      dockerfile: dockerfile
+      context: .
+      target: build
+    volumes:
+      - .:/go/bin/app
